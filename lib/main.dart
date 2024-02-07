@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,7 +28,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String tempNote = "";
   int selectedIndex = 0;
+  List<String> allNotes = ["aaa", "111"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        selectedFontSize: 20 ,
-        unselectedItemColor: Colors.black87,
-        unselectedFontSize: 14,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          selectedItemColor: Colors.black,
+          selectedFontSize: 20,
+          unselectedItemColor: Colors.black87,
+          unselectedFontSize: 14,
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           currentIndex: selectedIndex,
           onTap: (value) {
             selectedIndex = value;
@@ -53,17 +57,56 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(icon: Container(), label: "Add Note"),
             BottomNavigationBarItem(icon: Container(), label: "All Notes"),
           ]),
-          
-          body: selectedIndex == 0 ?  myAddNote(): myAllNotes(),
+      body: selectedIndex == 0 ? myAddNote() : myAllNotes(),
     );
   }
-  
 
-  Widget myAddNote(){
-    return Container(color: Colors.yellow, child: Center( child: Text("Hello"),),) ;
+  Widget myAddNote() {
+    return Center(
+        child: Container(
+            padding: EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: TextFormField(
+                        maxLines: 5,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        onChanged: (value) {
+                          tempNote = value;
+                          setState(() {});
+                        },
+                      )),
+                  TextButton(
+                      onPressed: () {
+                        allNotes.add(tempNote);
+                        print(allNotes);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        child: Text(
+                          "Add",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ))
+                ],
+              ),
+            )));
   }
 
-  Widget myAllNotes(){
-    return Container(color: Colors.green, child: Center( child: Text("Hy"),),) ;
+  Widget myAllNotes() {
+    List<Widget> widgets = allNotes.mapIndexed((index, note) {
+      return Container(
+          height: 50,
+          color: index % 2 == 0 ? Colors.grey : Colors.blueGrey,
+          child: Text(note));
+    }).toList();
+
+
+    return Container(child: ListView(children: widgets));
   }
 }
