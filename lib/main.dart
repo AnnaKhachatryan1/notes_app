@@ -28,7 +28,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String tempNote = "";
   int selectedIndex = 0;
   List<String> allNotes = [];
   TextEditingController notesController = TextEditingController();
@@ -36,10 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             centerTitle: true,
@@ -62,66 +61,68 @@ class _MyHomePageState extends State<MyHomePage> {
                 BottomNavigationBarItem(icon: Container(), label: "Add Note"),
                 BottomNavigationBarItem(icon: Container(), label: "All Notes"),
               ]),
-          body: GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: selectedIndex == 0 ? myAddNote() : myAllNotes(),
-          )),
-    );
+          body: selectedIndex == 0 ? myAddNote() : myAllNotes(),
+        ));
   }
 
   Widget myAddNote() {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Center(
-          child: Container(
-              padding: EdgeInsets.all(20),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(border: Border.all()),
-                        child: TextFormField(
-                          controller: notesController,
-                          maxLines: 5,
-                          decoration: InputDecoration(border: InputBorder.none),
-                          // onChanged: (value) {
-                          //   tempNote = value;
-                          //   setState(() {});
-                          // },
-                        )),
-                    TextButton(
-                        onPressed: () {
-                          allNotes.add(notesController.text);
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          notesController.value = TextEditingValue.empty;
-                          print(allNotes);
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          child: Text(
-                            "Add",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ))
-                  ],
-                ),
-              ))),
-    );
+    return Center(
+        child: Container(
+            padding: EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: TextFormField(
+                        controller: notesController,
+                        maxLines: 5,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        // onChanged: (value) {
+                        //   tempNote = value;
+                        //   setState(() {});
+                        // },
+                      )),
+                  TextButton(
+                      onPressed: () {
+                        allNotes.add(notesController.text);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        notesController.value = TextEditingValue.empty;
+                        print(allNotes);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        child: Text(
+                          "Add",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ))
+                ],
+              ),
+            )));
   }
 
   Widget myAllNotes() {
     List<Widget> widgets = allNotes.mapIndexed((index, note) {
       return Container(
-          height: 50,
-          color: index % 2 == 0 ? Colors.purple : Colors.purpleAccent,
-          child: Text(note));
+          // height: 50,
+          color: index % 2 == 0 ? Colors.black : Colors.white,
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: 300.0,
+                  maxWidth: 300.0,
+                  minHeight: 30.0,
+                  maxHeight: 100.0,
+                ),
+                child: Text(note,
+                    style: TextStyle(
+                        color: index % 2 == 0 ? Colors.white : Colors.black)),
+              )));
     }).toList();
 
     return Container(child: ListView(children: widgets));
