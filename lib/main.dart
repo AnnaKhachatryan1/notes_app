@@ -31,6 +31,47 @@ class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
   List<String> allNotes = [];
   TextEditingController notesController = TextEditingController();
+  List<int> myList = [4, 1, 3, 12, 5, 6, 7, 9, 5, 44, 122];
+  List<String> names = ["aa", "bb", "cc"];
+  int counter = 0;
+  @override
+  void initState() {
+    super.initState();
+    // myList.forEach((element) {
+    //   if (element % 2 == 0) {
+    //     counter++;
+    //   }
+    // });
+
+    //   final a = myList.map((element) {
+    //     if (element % 2 == 0) {
+    //       return element;
+    //     }
+    //   }).whereNotNull().toList();
+    //   print(a);
+    // }
+
+    // final a = names
+    //     .map((element) {
+    //       return Text(element);
+    //     })
+    //     .whereNotNull()
+    //     .toList();
+    // print(a);
+
+
+       List<String> reversedList = List.generate(
+    myList.length,
+    (index) {
+      int reversedIndex = myList.length - 1 - index;
+      return '${myList[reversedIndex]}';
+    },
+  );
+
+  print(reversedList);
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
