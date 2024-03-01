@@ -108,23 +108,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget myAllNotes() {
     List<Widget> widgets = allNotes.mapIndexed((index, note) {
       return Container(
-          // height: 50,
           color: index % 2 == 0 ? Colors.black : Colors.white,
           child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 300.0,
-                  maxWidth: 300.0,
-                  minHeight: 30.0,
-                  maxHeight: 100.0,
-                ),
-                child: Text(note,
-                    style: TextStyle(
-                        color: index % 2 == 0 ? Colors.white : Colors.black)),
-              )));
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text(note,
+                style: TextStyle(
+                    color: index % 2 == 0 ? Colors.white : Colors.black)),
+          ));
     }).toList();
 
-    return Container(child: ListView(children: widgets));
+    return ListView(children: widgets);
   }
 }
