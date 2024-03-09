@@ -1,5 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_app/add_notes.dart';
+import 'package:notes_app/all_notes.dart';
+import 'package:notes_app/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,9 +30,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedIndex = 0;
   List<String> allNotes = [];
-  TextEditingController notesController = TextEditingController();
+
+  ValueNotifier<int> indexNotifier = ValueNotifier(0);
+  ValueNotifier<int> counterNotifier = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
@@ -39,84 +42,62 @@ class _MyHomePageState extends State<MyHomePage> {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            centerTitle: true,
-            title: Text(
-              selectedIndex == 0 ? "Add Note" : "All Notes",
-            ),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: Colors.black,
-              selectedFontSize: 20,
-              unselectedItemColor: Colors.black87,
-              unselectedFontSize: 14,
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              currentIndex: selectedIndex,
-              onTap: (value) {
-                selectedIndex = value;
-                setState(() {});
-              },
-              items: [
-                BottomNavigationBarItem(icon: Container(), label: "Add Note"),
-                BottomNavigationBarItem(icon: Container(), label: "All Notes"),
-              ]),
-          body: selectedIndex == 0 ? myAddNote() : myAllNotes(),
-        ));
-  }
-
-  Widget myAddNote() {
-    return Center(
-        child: Container(
-            padding: EdgeInsets.all(20),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                      decoration: BoxDecoration(border: Border.all()),
-                      child: TextFormField(
-                        controller: notesController,
-                        maxLines: 5,
-                        decoration: InputDecoration(border: InputBorder.none),
-                        // onChanged: (value) {
-                        //   tempNote = value;
-                        //   setState(() {});
-                        // },
-                      )),
-                  TextButton(
-                      onPressed: () {
-                        allNotes.add(notesController.text);
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        notesController.value = TextEditingValue.empty;
-                        print(allNotes);
+            appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                centerTitle: true,
+                title: ValueListenableBuilder(
+                    valueListenable: indexNotifier,
+                    builder: (context, index, child) {
+                      return Text(index == 0
+                          ? "Add Note"
+                          : index == 1
+                              ? "All Notes"
+                              : "Profile");
+                    })),
+            bottomNavigationBar: ValueListenableBuilder(
+                valueListenable: indexNotifier,
+                builder: (context, index, child) {
+                  return BottomNavigationBar(
+                      selectedItemColor: Colors.black,
+                      selectedFontSize: 20,
+                      unselectedItemColor: Colors.black87,
+                      unselectedFontSize: 14,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      currentIndex: index,
+                      onTap: (test) {
+                        indexNotifier.value = test;
+                        // setState(() {});
                       },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        child: Text(
-                          "Add",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ))
-                ],
-              ),
-            )));
-  }
-
-  Widget myAllNotes() {
-    List<Widget> widgets = allNotes.mapIndexed((index, note) {
-      return Container(
-          color: index % 2 == 0 ? Colors.black : Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Text(note,
-                style: TextStyle(
-                    color: index % 2 == 0 ? Colors.white : Colors.black)),
-          ));
-    }).toList();
-
-    return ListView(children: widgets);
+                      items: [
+                        BottomNavigationBarItem(
+                            icon: Container(), label: "Add Note"),
+                        BottomNavigationBarItem(
+                            icon: Container(), label: "All Notes"),
+                        BottomNavigationBarItem(
+                            icon: Container(), label: "Profile"),
+                      ]);
+                }),
+            body: ValueListenableBuilder(
+                valueListenable: indexNotifier,
+                builder: (context, index, child) {
+                  return index == 0
+                      ? AddNotes(
+                          builder: (text) {
+                            allNotes.add(text);
+                            
+                            counterNotifier.value = allNotes.length;
+                            print(text);
+                          },
+                        )
+                      : index == 1
+                          ? AllNotes(
+                              notes: allNotes,
+                              notifier: indexNotifier,
+                            )
+                          :  Profile(
+                            myNotifier: counterNotifier,
+                          );
+                })));
   }
 }
